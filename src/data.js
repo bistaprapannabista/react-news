@@ -1,4 +1,4 @@
-const news = [
+const articles = [
       {
         "source": {
           "id": "ars-technica",
@@ -1301,4 +1301,4 @@ const news = [
       }
     ];
 
-export {news};
+export default articles;
