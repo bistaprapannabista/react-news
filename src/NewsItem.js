@@ -4,7 +4,7 @@ class NewsItem extends React.Component {
   render() {
     return (
       <div className="card m-3" style={{ width: "18rem" }}>
-        <img src={this.props.imageUrl} sclassName="card-img-top" alt="..." />
+        <img src={this.props.imageUrl} className="card-img-top" alt="..." />
         <div className="card-body">
           <h5 className="card-title">{this.props.title}</h5>
           <p className="card-text">{this.props.description}</p>
