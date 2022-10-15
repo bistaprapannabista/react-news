@@ -1,45 +1,52 @@
 import React from "react";
 import NewsItem from "./NewsItem";
-import spinner from "./spinner.gif";
+import Spinner from "./Spinner.js";
 
+const url =
+  "https://newsapi.org/v2/top-headlines?apiKey=429bdf42c9774763baaaa52ba67ba3ed&language=en";
 class News extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { articles: [], page: 1, pageSize: 6, loading: true };
+    this.state = {
+      articles: [],
+      page: 1,
+      loading: true,
+      category: this.props.category,
+      totalResults: null,
+    };
+  }
+
+  async updateNews() {
+    let data = await fetch(
+      url +
+        `&category=${this.state.category}` +
+        `&page=${this.state.page}&pageSize=${this.props.pageSize}`
+    );
+    let parsedData = await data.json();
+    this.setState({
+      articles: parsedData.articles,
+      totalResults: parsedData.totalResults,
+      loading: false,
+    });
   }
 
   async componentDidMount() {
-    let url = `https://newsapi.org/v2/top-headlines?q=program&apiKey=157f1d7256d245b4ace8cc5b93536ca3&page=${this.state.page}&pageSize=${this.state.pageSize}`;
-    let data = await fetch(url);
-    let parsedData = await data.json();
-    console.log(parsedData.articles.length);
-    console.log(parsedData);
-    this.setState({ articles: parsedData.articles,loading:false});
+    this.updateNews();
   }
 
   nextPageHandler = async () => {
-    this.setState({ loading:true});
-    this.setState({ page: ++this.state.page });
-    let url = `https://newsapi.org/v2/top-headlines?q=program&apiKey=157f1d7256d245b4ace8cc5b93536ca3&page=${this.state.page}&pageSize=${this.state.pageSize}`;
-    let data = await fetch(url);
-    let parsedData = await data.json();
-    console.log(parsedData.articles.length);
-    this.setState({ articles: parsedData.articles,loading:false});
+    this.setState({ loading: true, page: ++this.state.page });
+    this.updateNews();
   };
 
   prevPageHandler = async () => {
-    this.setState({ loading:true});
-    this.setState({ page: --this.state.page });
-    let url = `https://newsapi.org/v2/top-headlines?q=program&apiKey=157f1d7256d245b4ace8cc5b93536ca3&page=${this.state.page}&pageSize=${this.state.pageSize}`;
-    let data = await fetch(url);
-    let parsedData = await data.json();
-    this.setState({ articles: parsedData.articles,loading:false});
+    this.setState({ loading: true, page: --this.state.page });
+    this.updateNews();
   };
 
   render() {
-    if (this.state.loading === true) {
-      return <img src={spinner} alt="..." />;
-    } else {
+    if (this.state.loading) return <Spinner />;
+    else
       return (
         <>
           <h1>News app</h1>
@@ -55,20 +62,31 @@ class News extends React.Component {
                       url={article.url}
                       key={article.url}
                       timeStamp={article.publishedAt}
+                      author={article.author}
+                      source={article.source.name}
                     />
                   </div>
                 );
               })}
             </div>
 
-            <div class="d-flex justify-content-between">
+            <div className="d-flex justify-content-between">
               <button
                 onClick={this.nextPageHandler}
-                disabled={this.state.articles.length != 6}
+                disabled={
+                  !(
+                    this.state.page <
+                    Math.ceil(this.state.totalResults / this.props.pageSize)
+                  )
+                }
                 className="btn btn-dark"
               >
                 &rarr; Next
               </button>
+              <div>
+                {this.state.page} of{" "}
+                {Math.ceil(this.state.totalResults / this.props.pageSize)}
+              </div>
               <button
                 onClick={this.prevPageHandler}
                 disabled={this.state.page <= 1}
@@ -80,7 +98,6 @@ class News extends React.Component {
           </div>
         </>
       );
-    }
   }
 }
 
