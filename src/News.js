@@ -45,6 +45,7 @@ class News extends React.Component {
   };
 
   render() {
+    {document.title=`${this.props.category.toUpperCase()}- News`}
     if (this.state.loading) return <Spinner />;
     else
       return (
@@ -52,22 +53,22 @@ class News extends React.Component {
           <h1>News app</h1>
           <div className="container">
             <div className="row">
-              {this.state.articles.map((article) => {
-                return (
-                  <div className="col-md-4" key={article.url}>
-                    <NewsItem
-                      title={article.title}
-                      description={article.description}
-                      imageUrl={article.urlToImage}
-                      url={article.url}
-                      key={article.url}
-                      timeStamp={article.publishedAt}
-                      author={article.author}
-                      source={article.source.name}
-                    />
-                  </div>
-                );
-              })}
+                {this.state.articles.map((article) => {
+                  return (
+                    <div className="col-md-4" key={article.url}>
+                      <NewsItem
+                        title={article.title}
+                        description={article.description}
+                        imageUrl={article.urlToImage}
+                        url={article.url}
+                        key={article.url}
+                        timeStamp={article.publishedAt}
+                        author={article.author}
+                        source={article.source.name}
+                      />
+                    </div>
+                  );
+                })}
             </div>
 
             <div className="d-flex justify-content-between">

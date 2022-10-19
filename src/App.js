@@ -6,12 +6,12 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import React from "react";
 
 class App extends React.Component {
-  pageSize = 18;
+  pageSize = 6;
   render() {
     return (
       <div className="App">
         <Router>
-          <Navbar title="onlinePatrika" />
+          <Navbar title="World News" />
           <Routes>
             <Route
               exact
