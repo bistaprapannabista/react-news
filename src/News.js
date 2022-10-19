@@ -1,6 +1,7 @@
 import React from "react";
 import NewsItem from "./NewsItem";
 import Spinner from "./Spinner.js";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const url =
   "https://newsapi.org/v2/top-headlines?apiKey=429bdf42c9774763baaaa52ba67ba3ed&language=en";
@@ -30,29 +31,52 @@ class News extends React.Component {
     });
   }
 
+  fetchMoreData = async () =>{
+    this.setState({page:++this.state.page});
+    let data = await fetch(
+      url +
+        `&category=${this.state.category}` +
+        `&page=${this.state.page}&pageSize=${this.props.pageSize}`
+    );
+    let parsedData = await data.json();
+    this.setState({
+      articles: this.state.articles.concat(parsedData.articles),
+      totalResults: parsedData.totalResults,
+      loading: false,
+    });  
+  }
+
   async componentDidMount() {
     this.updateNews();
   }
 
-  nextPageHandler = async () => {
-    this.setState({ loading: true, page: ++this.state.page });
-    this.updateNews();
-  };
+  // nextPageHandler = async () => {
+  //   this.setState({ loading: true, page: ++this.state.page });
+  //   this.updateNews();
+  // };
 
-  prevPageHandler = async () => {
-    this.setState({ loading: true, page: --this.state.page });
-    this.updateNews();
-  };
+  // prevPageHandler = async () => {
+  //   this.setState({ loading: true, page: --this.state.page });
+  //   this.updateNews();
+  // };
 
   render() {
-    {document.title=`${this.props.category.toUpperCase()}- News`}
+    {
+      document.title = `News - ${this.props.category.toUpperCase()}`;
+    }
     if (this.state.loading) return <Spinner />;
     else
       return (
         <>
-          <h1>News app</h1>
+          <h1>News - {this.props.category}</h1>
           <div className="container">
-            <div className="row">
+            <InfiniteScroll
+              dataLength={this.state.articles.length}
+              next={this.fetchMoreData}
+              hasMore={this.state.articles.length!=this.state.totalResults}
+              loader={<Spinner/>}
+            >
+              <div className="row">
                 {this.state.articles.map((article) => {
                   return (
                     <div className="col-md-4" key={article.url}>
@@ -69,9 +93,10 @@ class News extends React.Component {
                     </div>
                   );
                 })}
-            </div>
+              </div>
+            </InfiniteScroll>
 
-            <div className="d-flex justify-content-between">
+            {/* <div className="d-flex justify-content-between">
               <button
                 onClick={this.nextPageHandler}
                 disabled={
@@ -95,7 +120,7 @@ class News extends React.Component {
               >
                 Prev &larr;
               </button>
-            </div>
+            </div> */}
           </div>
         </>
       );
