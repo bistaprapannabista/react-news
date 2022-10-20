@@ -1,10 +1,7 @@
 import spinner from "./spinner.gif";
-import React from 'react';
 
-class Spinner extends React.Component{
-    render(){
+const Spinner = () =>{
     return <img src={spinner} alt="..." />
-    }
 }
 
 export default Spinner;

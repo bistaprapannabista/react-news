@@ -1,36 +1,31 @@
 import "./App.css";
-import News from "./News.js";
+import News from "./components/News.js";
 import PropTypes from "prop-types";
-import Navbar from "./Navbar";
+import Navbar from "./components/Navbar";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import React from "react";
 import LoadingBar from 'react-top-loading-bar';
+import { useState } from "react";
 
-class App extends React.Component {
-  pageSize = 20;
-  constructor(props) {
-    super(props);
-    this.state = { progress: 0 };
-  }
-  setProgress=(progress)=>{this.setState({progress:progress})}
-  render() {
+const App = () => {
+  const pageSize = 20;
+  const[progress,setProgress]=useState(0);
     return (
       <div className="App">
         <Router>
           <Navbar title="World News" />
           <LoadingBar
             color="red"
-            progress={this.state.progress}
-            onLoaderFinished={() => this.setState({progress:0})}
+            progress={progress}
+            onLoaderFinished={() => setProgress(0)}
           />
           <Routes>
             <Route
               exact
               path="/"
               element={
-                <News setProgress={this.setProgress}
+                <News setProgress={setProgress}
                   key="general"
-                  pageSize={this.pageSize}
+                  pageSize={pageSize}
                   category="general"
                 />
               }
@@ -39,9 +34,9 @@ class App extends React.Component {
               exact
               path="/technology"
               element={
-                <News setProgress={this.setProgress}
+                <News setProgress={setProgress}
                   key="technology"
-                  pageSize={this.pageSize}
+                  pageSize={pageSize}
                   category="technology"
                 />
               }
@@ -50,15 +45,15 @@ class App extends React.Component {
               exact
               path="/sport"
               element={
-                <News setProgress={this.setProgress} pageSize={this.pageSize} key="sport" category="sport" />
+                <News setProgress={setProgress} pageSize={pageSize} key="sport" category="sport" />
               }
             />
             <Route
               exact
               path="/entertainment"
               element={
-                <News setProgress={this.setProgress}
-                  pageSize={this.pageSize}
+                <News setProgress={setProgress}
+                  pageSize={pageSize}
                   key="entertainment"
                   category="entertainment"
                 />
@@ -68,8 +63,8 @@ class App extends React.Component {
               exact
               path="/politcs"
               element={
-                <News setProgress={this.setProgress}
-                  pageSize={this.pageSize}
+                <News setProgress={setProgress}
+                  pageSize={pageSize}
                   key="politics"
                   category="politics"
                 />
@@ -79,8 +74,8 @@ class App extends React.Component {
               exact
               path="/science"
               element={
-                <News setProgress={this.setProgress}
-                  pageSize={this.pageSize}
+                <News setProgress={setProgress}
+                  pageSize={pageSize}
                   key="science"
                   category="science"
                 />
@@ -90,15 +85,15 @@ class App extends React.Component {
               exact
               path="/health"
               element={
-                <News setProgress={this.setProgress} pageSize={this.pageSize} key="health" category="health" />
+                <News setProgress={setProgress} pageSize={pageSize} key="health" category="health" />
               }
             />
             <Route
               exact
               path="/business"
               element={
-                <News setProgress={this.setProgress}
-                  pageSize={this.pageSize}
+                <News setProgress={setProgress}
+                  pageSize={pageSize}
                   key="business"
                   category="business"
                 />
@@ -108,7 +103,6 @@ class App extends React.Component {
         </Router>
       </div>
     );
-  }
 }
 
 export default App;
