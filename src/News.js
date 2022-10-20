@@ -4,7 +4,7 @@ import Spinner from "./Spinner.js";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 const url =
-  "https://newsapi.org/v2/top-headlines?apiKey=429bdf42c9774763baaaa52ba67ba3ed&language=en";
+  "https://newsapi.org/v2/top-headlines?apiKey=94312eb8454540f1a9559d4489ed08f2&language=en";
 class News extends React.Component {
   constructor(props) {
     super(props);
@@ -14,21 +14,25 @@ class News extends React.Component {
       loading: true,
       category: this.props.category,
       totalResults: null,
+      progress: 0,
     };
   }
 
   async updateNews() {
+    this.props.setProgress(20); 
     let data = await fetch(
       url +
         `&category=${this.state.category}` +
         `&page=${this.state.page}&pageSize=${this.props.pageSize}`
     );
     let parsedData = await data.json();
+    this.props.setProgress(50);
     this.setState({
       articles: parsedData.articles,
       totalResults: parsedData.totalResults,
       loading: false,
     });
+    this.props.setProgress(100);
   }
 
   fetchMoreData = async () =>{
@@ -68,6 +72,7 @@ class News extends React.Component {
     else
       return (
         <>
+              
           <h1>News - {this.props.category}</h1>
           <div className="container">
             <InfiniteScroll
